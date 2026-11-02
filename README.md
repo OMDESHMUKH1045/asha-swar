@@ -57,7 +57,7 @@ The full Python application needs a Streamlit host; Netlify can host only the st
 
 4. Deploy. The app reads the key from Streamlit Secrets; no `.env` file needs to be uploaded.
 
-The repository has no Git remote configured yet, so connect or create its GitHub repository before deploying.
+The source is published at https://github.com/OMDESHMUKH1045/asha-swar. The `.env` file is intentionally excluded.
 
 ## Run
 
