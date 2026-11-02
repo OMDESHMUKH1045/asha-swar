@@ -1,0 +1,268 @@
+[
+  {
+    "id": 1,
+    "language": "Hindi",
+    "spoken_text": "हाँ जी, सुनीता देवी का ANC विजिट था, उम्र चौबीस साल, Hb आठ... नहीं, आठ पॉइंट पाँच आया है, वजन बावन किलो, कोई चक्कर या दर्द नहीं है।",
+    "ground_truth": {
+      "name": "सुनीता देवी",
+      "age": 24,
+      "visit_type": "ANC",
+      "hb": 8.5,
+      "bp": null,
+      "weight_kg": 52,
+      "symptoms": []
+    },
+    "expected_risk": "refer_soon",
+    "why": "Hb 8.5 is low in pregnancy and needs follow-up."
+  },
+  {
+    "id": 2,
+    "language": "Hindi",
+    "spoken_text": "रेखा का प्रेग्नेंसी चेकअप किया, उम्र उनतीस है, BP डेढ़ सौ बाय एक सौ है और सिर में तेज दर्द भी बोल रही है।",
+    "ground_truth": {
+      "name": "रेखा",
+      "age": 29,
+      "visit_type": "ANC",
+      "hb": null,
+      "bp": "150/100",
+      "weight_kg": null,
+      "symptoms": [
+        "तेज सिरदर्द"
+      ]
+    },
+    "expected_risk": "urgent",
+    "why": "Severely elevated BP with headache is a pregnancy danger sign."
+  },
+  {
+    "id": 3,
+    "language": "Hindi",
+    "spoken_text": "मीना का पोस्टनटल विजिट था, डिलीवरी के बाद पाँचवां दिन है, उम्र छब्बीस साल, थोड़ा खून ज्यादा जा रहा है और कमजोरी लग रही है।",
+    "ground_truth": {
+      "name": "मीना",
+      "age": 26,
+      "visit_type": "postnatal",
+      "hb": null,
+      "bp": null,
+      "weight_kg": null,
+      "symptoms": [
+        "अधिक रक्तस्राव",
+        "कमजोरी"
+      ]
+    },
+    "expected_risk": "urgent",
+    "why": "Heavy bleeding after delivery requires urgent assessment."
+  },
+  {
+    "id": 4,
+    "language": "Hindi",
+    "spoken_text": "नवजात आरव को देखा, जन्म के दस दिन हुए हैं, वजन ढाई किलो है, दूध ठीक से पी रहा है, बुखार-वुखार नहीं है।",
+    "ground_truth": {
+      "name": "आरव",
+      "age": 10,
+      "visit_type": "newborn",
+      "hb": null,
+      "bp": null,
+      "weight_kg": 2.5,
+      "symptoms": []
+    },
+    "expected_risk": "none",
+    "why": "No concerning symptoms were reported."
+  },
+  {
+    "id": 5,
+    "language": "Hindi",
+    "spoken_text": "रोहन को बुखार है, उम्र सात साल है, कल रात से गरम है और खांसी भी है, वजन नहीं लिया आज।",
+    "ground_truth": {
+      "name": "रोहन",
+      "age": 7,
+      "visit_type": "general fever/illness",
+      "hb": null,
+      "bp": null,
+      "weight_kg": null,
+      "symptoms": [
+        "बुखार",
+        "खांसी"
+      ]
+    },
+    "expected_risk": "refer_soon",
+    "why": "Fever with cough needs clinical follow-up."
+  },
+  {
+    "id": 6,
+    "language": "Marathi",
+    "spoken_text": "आज मंगला ताईंची ANC तपासणी केली, वय बावीस वर्षं, Hb सहा पॉइंट आठ आहे, वजन सत्तेचाळीस किलो, थोडा दम लागतो म्हणतायत.",
+    "ground_truth": {
+      "name": "मंगला",
+      "age": 22,
+      "visit_type": "ANC",
+      "hb": 6.8,
+      "bp": null,
+      "weight_kg": 47,
+      "symptoms": [
+        "दम लागणे"
+      ]
+    },
+    "expected_risk": "urgent",
+    "why": "Hb below 7 in pregnancy is a severe red flag."
+  },
+  {
+    "id": 7,
+    "language": "Marathi",
+    "spoken_text": "सोनालीचं पोस्टनटल फॉलोअप केलं, वय पंचवीस, बाळंतपणाला बारा दिवस झालेत, दूध पाजतेय आणि काही त्रास नाही म्हणते.",
+    "ground_truth": {
+      "name": "सोनाली",
+      "age": 25,
+      "visit_type": "postnatal",
+      "hb": null,
+      "bp": null,
+      "weight_kg": null,
+      "symptoms": []
+    },
+    "expected_risk": "none",
+    "why": "The postnatal visit is described as uncomplicated."
+  },
+  {
+    "id": 8,
+    "language": "Marathi",
+    "spoken_text": "बाळ ओंकारचा इम्युनायझेशनचा व्हिजिट, वय नऊ महिने, वजन आठ... नाही, सात पॉइंट आठ किलो, आज लस दिल्यावर थोडं रडलं बस.",
+    "ground_truth": {
+      "name": "ओंकार",
+      "age": 9,
+      "visit_type": "child immunization",
+      "hb": null,
+      "bp": null,
+      "weight_kg": 7.8,
+      "symptoms": [
+        "लसीनंतर रडणे"
+      ]
+    },
+    "expected_risk": "none",
+    "why": "Brief crying after immunization is not a severe concern."
+  },
+  {
+    "id": 9,
+    "language": "Marathi",
+    "spoken_text": "पूजाचं बाळ सायली, वय सांगितलं नाही, खूप बारीक वाटतंय आणि खाणं कमी करते, वजन सहा किलो आहे म्हणून कुपोषणासाठी फॉलोअप सांगितलं.",
+    "ground_truth": {
+      "name": "सायली",
+      "age": null,
+      "visit_type": "child malnutrition",
+      "hb": null,
+      "bp": null,
+      "weight_kg": 6,
+      "symptoms": [
+        "खाणे कमी करणे",
+        "खूप बारीक दिसणे"
+      ]
+    },
+    "expected_risk": "refer_soon",
+    "why": "Possible malnutrition with poor eating needs follow-up."
+  },
+  {
+    "id": 10,
+    "language": "Marathi",
+    "spoken_text": "आज दोन जणांना पाहिलं, गणेशला ताप आणि अंगदुखी आहे, वय पाच वर्षं; आणि त्याची बहीण राधा, तीन वर्षांची, तिचं वजन अकरा किलो, ती ठीक आहे.",
+    "ground_truth": {
+      "name": "गणेश; राधा",
+      "age": null,
+      "visit_type": "general fever/illness; child immunization",
+      "hb": null,
+      "bp": null,
+      "weight_kg": null,
+      "symptoms": [
+        "गणेश: ताप",
+        "गणेश: अंगदुखी"
+      ]
+    },
+    "expected_risk": "refer_soon",
+    "why": "Two patients are mentioned and Ganesh has fever with body ache."
+  },
+  {
+    "id": 11,
+    "language": "Hinglish",
+    "spoken_text": "Neha ka ANC home visit tha, age twenty seven, weight fifty four kilo, baby movement aaj subah se bilkul feel nahi hua bol rahi hai.",
+    "ground_truth": {
+      "name": "Neha",
+      "age": 27,
+      "visit_type": "ANC",
+      "hb": null,
+      "bp": null,
+      "weight_kg": 54,
+      "symptoms": [
+        "no fetal movement"
+      ]
+    },
+    "expected_risk": "urgent",
+    "why": "Absent fetal movement is an urgent pregnancy red flag."
+  },
+  {
+    "id": 12,
+    "language": "Hinglish",
+    "spoken_text": "Postnatal visit for Kavita, delivery ko teen weeks hue, age thirty, fever nahi hai but weakness thodi hai, weight aaj measure nahi kiya.",
+    "ground_truth": {
+      "name": "Kavita",
+      "age": 30,
+      "visit_type": "postnatal",
+      "hb": null,
+      "bp": null,
+      "weight_kg": null,
+      "symptoms": [
+        "weakness"
+      ]
+    },
+    "expected_risk": "refer_soon",
+    "why": "Postnatal weakness should be followed up."
+  },
+  {
+    "id": 13,
+    "language": "Hinglish",
+    "spoken_text": "Baby Iqra ka newborn check kiya, age six days, weight two point nine kg, feeding achhi hai aur breathing normal hai.",
+    "ground_truth": {
+      "name": "Iqra",
+      "age": 6,
+      "visit_type": "newborn",
+      "hb": null,
+      "bp": null,
+      "weight_kg": 2.9,
+      "symptoms": []
+    },
+    "expected_risk": "none",
+    "why": "Feeding and breathing are described as normal."
+  },
+  {
+    "id": 14,
+    "language": "Hinglish",
+    "spoken_text": "Aaj Sameer aur uski mummy dono ka dekh liya, Sameer four years ka hai, immunization ke liye aaya tha aur weight fourteen kg; mummy Farida ka ANC bhi tha, age twenty three, Hb nine point two.",
+    "ground_truth": {
+      "name": "Sameer; Farida",
+      "age": null,
+      "visit_type": "child immunization; ANC",
+      "hb": null,
+      "bp": null,
+      "weight_kg": null,
+      "symptoms": []
+    },
+    "expected_risk": "refer_soon",
+    "why": "Two patients are mentioned and Farida's Hb of 9.2 is low in pregnancy."
+  },
+  {
+    "id": 15,
+    "language": "Hinglish",
+    "spoken_text": "Ramesh ki beti Anu ko kal se fever hai, age eight years, vomiting do baar hui aur paani kam pee rahi hai, weight twenty one kilo.",
+    "ground_truth": {
+      "name": "Anu",
+      "age": 8,
+      "visit_type": "general fever/illness",
+      "hb": null,
+      "bp": null,
+      "weight_kg": 21,
+      "symptoms": [
+        "fever",
+        "vomiting",
+        "reduced fluid intake"
+      ]
+    },
+    "expected_risk": "refer_soon",
+    "why": "Fever with vomiting and reduced fluid intake needs timely assessment."
+  }
+]
