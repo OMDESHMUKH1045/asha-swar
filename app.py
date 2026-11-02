@@ -19,13 +19,28 @@ load_dotenv(ROOT / ".env")
 
 st.set_page_config(page_title="ASHA Voice Register", page_icon="🩺", layout="wide")
 st.markdown("""<style>
- .block-container{max-width:1120px;padding-top:2rem}
- [data-testid="stMetric"]{background:#f4f8f5;padding:1rem;border-radius:14px}
- .quote{color:#64748b;font-size:.88rem;margin-top:-.5rem}
+ .block-container{max-width:1200px;padding-top:1.7rem;padding-bottom:3rem}
+ [data-testid="stMetric"]{background:rgba(20,135,117,.08);padding:1rem;border-radius:16px}
+ [data-testid="stVerticalBlockBorderWrapper"]{border-color:rgba(20,135,117,.22)!important;border-radius:18px!important}
+ [data-testid="stSidebar"]{border-right:1px solid rgba(20,135,117,.16)}
+ .stButton>button{border-radius:12px;min-height:2.7rem;font-weight:600}
+ .quote{color:#718096;font-size:.88rem;margin-top:-.5rem}
+ .workflow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.65rem;margin:1.25rem 0 2rem}
+ .workflow-step{display:flex;align-items:center;gap:.65rem;padding:.8rem .9rem;border:1px solid rgba(128,128,128,.22);border-radius:14px;background:rgba(128,128,128,.04);color:#87919b;font-size:.9rem;font-weight:600}
+ .workflow-step .number{display:grid;place-items:center;width:1.8rem;height:1.8rem;border-radius:50%;background:rgba(128,128,128,.13);font-size:.78rem}
+ .workflow-step.done{color:#15947d;border-color:rgba(21,148,125,.35);background:rgba(21,148,125,.08)}
+ .workflow-step.active{color:#fff;border-color:#15947d;background:#117b6a}
+ .workflow-step.active .number{background:rgba(255,255,255,.2)}
+ @media(max-width:700px){.workflow{grid-template-columns:repeat(2,minmax(0,1fr))}.workflow-step{padding:.65rem;font-size:.82rem}}
 </style>""", unsafe_allow_html=True)
 
-st.title("🩺 ASHA Voice Register")
-st.caption("Voice-first home visit documentation · हिंदी · मराठी · English")
+hero, status = st.columns([5, 1])
+with hero:
+    st.title("🩺 ASHA Voice Register")
+    st.caption("Voice-first home visit documentation · हिंदी · मराठी · English")
+with status:
+    st.write("")
+    st.success("API ready" if is_configured() else "API key needed")
 st.info("Prototype decision-support tool. Risk rules must be verified against current MoHFW/NHM guidelines and do not replace clinical judgment.")
 
 if "register" not in st.session_state:
@@ -41,6 +56,22 @@ def _audio_once(cache_key: str, text: str, lang: str) -> None:
     if cache_key not in st.session_state.audio_cache:
         st.session_state.audio_cache[cache_key] = tts(text, lang)
     st.audio(st.session_state.audio_cache[cache_key], format="audio/wav")
+
+current_state = st.session_state.current
+if current_state is None:
+    active_step = 1
+elif all(f"{current_state['id']}:{idx}" in st.session_state.confirmed_ids
+         for idx in range(len(current_state.get("patients", [])))):
+    active_step = 4
+else:
+    active_step = 3
+workflow = [("Capture note", 1), ("Transcript", 2), ("Review patients", 3), ("Register", 4)]
+step_markup = '<div class="workflow">' + "".join(
+    f'<div class="workflow-step {"done" if n < active_step or (current_state is not None and n == 2) else "active" if n == active_step else ""}">'
+    f'<span class="number">{n:02}</span><span>{label}</span></div>'
+    for label, n in workflow
+) + '</div>'
+st.markdown(step_markup, unsafe_allow_html=True)
 
 try:
     notes = json.loads(DATA_PATH.read_text(encoding="utf-8"))
@@ -227,6 +258,14 @@ if current:
                 st.session_state.current = None
                 st.rerun()
 
+else:
+    st.subheader("2 · Review transcript")
+    with st.container(border=True):
+        st.caption("After you record a visit note or choose a synthetic note, the transcript will appear here for review.")
+    st.subheader("3 · Review extracted patients")
+    with st.container(border=True):
+        st.caption("Patient details, supporting quotes, and rule-based flags will appear here before you confirm them.")
+
 st.subheader("4 · Confirmed session register")
 if st.session_state.register:
     frame = pd.DataFrame(st.session_state.register).drop(columns=["_id"], errors="ignore")
@@ -234,4 +273,5 @@ if st.session_state.register:
     st.download_button("⬇ Download Register CSV", frame.to_csv(index=False).encode("utf-8-sig"),
                        "asha_register.csv", "text/csv", use_container_width=True)
 else:
-    st.caption("Confirmed patients will appear here during this session.")
+    with st.container(border=True):
+        st.caption("Confirmed records will appear here. You can then download the session register as a CSV.")
