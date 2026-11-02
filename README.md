@@ -41,7 +41,23 @@ Add a `.env` file in this folder:
 SARVAM_API_KEY=your_real_key_here
 ```
 
-Never commit `.env` or expose `SARVAM_API_KEY`. `.env` is ignored by Git.
+Never commit `.env` or expose `SARVAM_API_KEY`. `.env` and `.streamlit/secrets.toml` are ignored by Git. Locally the app reads the existing `.env`; on Streamlit Community Cloud it also reads `st.secrets`.
+
+## Deploy the full app
+
+The full Python application needs a Streamlit host; Netlify can host only the static `index.html` landing page.
+
+1. Push the project files to a GitHub repository. Keep `.env` out of the repository.
+2. In Streamlit Community Cloud, choose **Create app**, select the repository and branch, and set `app.py` as the entrypoint.
+3. In **Advanced settings → Secrets**, add:
+
+   ```toml
+   SARVAM_API_KEY = "your_real_key"
+   ```
+
+4. Deploy. The app reads the key from Streamlit Secrets; no `.env` file needs to be uploaded.
+
+The repository has no Git remote configured yet, so connect or create its GitHub repository before deploying.
 
 ## Run
 

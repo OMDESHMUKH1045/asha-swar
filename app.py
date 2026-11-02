@@ -1,7 +1,6 @@
 """ASHA Voice Register: reviewable voice-note prototype."""
 
 import json
-import os
 import re
 import uuid
 from datetime import datetime
@@ -12,7 +11,7 @@ import streamlit as st
 from dotenv import load_dotenv
 
 from rules import assess_risk
-from sarvam_client import SarvamError, extract, stt, tts
+from sarvam_client import SarvamError, extract, is_configured, stt, tts
 
 ROOT = Path(__file__).parent
 DATA_PATH = ROOT / "synthetic_asha_worker_notes.json"
@@ -53,8 +52,8 @@ def _quote(patient: dict, field: str) -> str:
     return f'↳ “{quote}”' if quote else "↳ No supporting quote"
 
 def _load_transcript(transcript: str, source_note: dict | None = None) -> bool:
-    if not os.getenv("SARVAM_API_KEY"):
-        st.error("SARVAM_API_KEY is not configured. Add it to your .env file.")
+    if not is_configured():
+        st.error("SARVAM_API_KEY is not configured. Add it to local .env or the hosting platform's Secrets settings.")
         return False
     try:
         with st.spinner("Reading the note and organizing each patient…"):
@@ -93,7 +92,7 @@ with st.sidebar:
     else:
         st.warning("Demo dataset is unavailable.")
     st.divider()
-    st.caption("API status: " + ("Key configured" if os.getenv("SARVAM_API_KEY") else "Key missing"))
+    st.caption("API status: " + ("Key configured" if is_configured() else "Key missing"))
     st.caption("Demo notes are synthetic and skip microphone transcription only.")
 
 st.subheader("1 · Record a home-visit note")

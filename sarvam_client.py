@@ -4,6 +4,7 @@ import base64
 import json
 import os
 import re
+from pathlib import Path
 from typing import Any
 
 import requests
@@ -23,16 +24,31 @@ class SarvamError(RuntimeError):
     """Safe, user-displayable API error."""
 
 
-def _key() -> str:
-    load_dotenv()
+def get_api_key() -> str:
+    """Read the key from local .env/environment or hosted Streamlit Secrets."""
+    load_dotenv(Path(__file__).with_name(".env"))
     key = os.getenv("SARVAM_API_KEY", "").strip()
     if not key:
-        raise SarvamError("SARVAM_API_KEY is missing. Add it to your .env file.")
+        try:
+            import streamlit as st
+            key = str(st.secrets.get("SARVAM_API_KEY", "")).strip()
+        except (FileNotFoundError, KeyError):
+            key = ""
+    if not key:
+        raise SarvamError("SARVAM_API_KEY is missing. Set it in the environment or Streamlit Secrets.")
     return key
 
 
+def is_configured() -> bool:
+    """Check whether a key is available without returning or displaying it."""
+    try:
+        return bool(get_api_key())
+    except SarvamError:
+        return False
+
+
 def _post(path: str, **kwargs: Any) -> requests.Response:
-    headers = {"api-subscription-key": _key()}
+    headers = {"api-subscription-key": get_api_key()}
     try:
         response = requests.post(BASE_URL + path, headers=headers, timeout=90, **kwargs)
     except requests.RequestException as exc:

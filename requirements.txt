@@ -2,3 +2,4 @@ streamlit>=1.40,<2
 requests>=2.32,<3
 python-dotenv>=1.0,<2
 pandas>=2.2,<4
+sarvamai>=0.1.42,<1
