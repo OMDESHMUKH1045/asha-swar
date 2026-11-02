@@ -60,6 +60,8 @@ def _audio_once(cache_key: str, text: str, lang: str) -> None:
 current_state = st.session_state.current
 if current_state is None:
     active_step = 1
+elif current_state.get("extraction_failed"):
+    active_step = 3
 elif all(f"{current_state['id']}:{idx}" in st.session_state.confirmed_ids
          for idx in range(len(current_state.get("patients", [])))):
     active_step = 4
@@ -93,22 +95,12 @@ def _load_transcript(transcript: str, source_note: dict | None = None) -> bool:
                                     "patients": patients, "source": source_note, "preloaded": False}
         return True
     except SarvamError as exc:
+        st.session_state.current = {"id": str(uuid.uuid4()), "transcript": transcript,
+                                    "patients": [], "source": source_note,
+                                    "preloaded": False, "extraction_failed": True}
         st.error("We couldn't structure this note safely. Please retry.")
         with st.expander("Technical details"):
             st.caption(str(exc))
-        if source_note and st.button("Use demo-safe fallback", key="safe_fallback"):
-            fallback = [{**p, "quotes": {}} for p in source_note.get("patients", [])]
-            truth = source_note.get("ground_truth")
-            if not fallback and isinstance(truth, dict):
-                name_value = truth.get("name")
-                if not isinstance(name_value, str) or ";" not in name_value:
-                    fallback = [{**truth, "age_unit": truth.get("age_unit"), "quotes": {}}]
-                else:
-                    st.warning("This note mentions multiple patients; preloaded fallback is available only for single-patient records.")
-                    return False
-            st.session_state.current = {"id": str(uuid.uuid4()), "transcript": transcript,
-                "patients": fallback, "source": source_note, "preloaded": True}
-            return True
     return False
 
 with st.sidebar:
@@ -156,6 +148,27 @@ if current:
     if current.get("preloaded"):
         st.warning("⚠ Preloaded synthetic demo data — Sarvam AI extraction was unavailable.")
     st.subheader("3 · Review extracted patients")
+    if current.get("extraction_failed"):
+        st.warning("Your transcript is saved. Patient extraction did not finish, so no details were added.")
+        retry, fallback_action = st.columns(2)
+        if retry.button("↻ Retry extraction", key=f"retry_extract_{current['id']}", use_container_width=True):
+            if _load_transcript(current["transcript"], current.get("source")):
+                st.rerun()
+        source_note = current.get("source")
+        if source_note and fallback_action.button("Use synthetic sample details", key=f"fallback_{current['id']}", use_container_width=True):
+            fallback = [{**p, "quotes": {}} for p in source_note.get("patients", [])]
+            truth = source_note.get("ground_truth")
+            if not fallback and isinstance(truth, dict):
+                name_value = truth.get("name")
+                if not isinstance(name_value, str) or ";" not in name_value:
+                    fallback = [{**truth, "age_unit": truth.get("age_unit"), "quotes": {}}]
+                else:
+                    st.warning("Synthetic fallback is available only for single-patient notes.")
+                    fallback = []
+            if fallback:
+                st.session_state.current = {"id": str(uuid.uuid4()), "transcript": current["transcript"],
+                    "patients": fallback, "source": source_note, "preloaded": True}
+                st.rerun()
     for idx, patient in enumerate(current["patients"]):
         patient.setdefault("quotes", {})
         assessment = assess_risk(patient)
